@@ -13,12 +13,12 @@ import javax.swing.table.DefaultTableModel;
  * @author Felix
  */
 public class DBConnection {
-    private final String url = "jdbc:mysql://localhost:3306/libdb";
-    private final String user = "root";
-    private final String pass = "";
+    private static final String url = "jdbc:mysql://localhost:3306/libdb";
+    private static final String user = "root";
+    private static final String pass = "";
 
     
-    public Connection getConn() throws SQLException {
+    public static Connection getConn() throws SQLException {
         return DriverManager.getConnection(url, user, pass);
     }
     
@@ -71,6 +71,35 @@ public class DBConnection {
                 @Override public boolean isCellEditable(int r, int col) { return false; }
                 @Override public Class<?> getColumnClass(int col) { return types[col]; }
             };
+        }
+    }
+    
+    public static Object scalar(String sql, Object... params) throws SQLException {
+        try (Connection c = getConn();
+             PreparedStatement ps = prepare(c, sql, false, params);
+             ResultSet rs = ps.executeQuery()) {
+            return rs.next() ? rs.getObject(1) : null;
+        }
+    }
+    
+    public static boolean exists(String sql, Object... params) throws SQLException {
+        return scalar(sql, params) != null;
+    }
+    
+    public static int update(String sql, Object... params) throws SQLException {
+        try (Connection c = getConn();
+             PreparedStatement ps = prepare(c, sql, false, params)) {
+            return ps.executeUpdate();
+        }
+    }
+
+    public static long insert(String sql, Object... params) throws SQLException {
+        try (Connection c = getConn();
+             PreparedStatement ps = prepare(c, sql, true, params)) {
+            ps.executeUpdate();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                return keys.next() ? keys.getLong(1) : -1;
+            }
         }
     }
 }
