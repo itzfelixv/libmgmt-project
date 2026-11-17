@@ -10,11 +10,14 @@ package librarymanagement;
  */
 public class LibraryManagement {
 
+    /** Whoever is logged in. Every window reads it from here. */
+    public static final Session SESSION = new Session();
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        LoginFrame.main(args);
     }
     
 }
