@@ -50,8 +50,6 @@ Each window or screen has a `.form` file, so you can edit its layout in NetBeans
 1. **Clone or copy the project** and open it in NetBeans (File → Open Project).
 
 2. **Create the database.** Run the schema script `library_schema.sql` in MySQL Workbench.
-   The app connects to a database called `libdb`. If your copy of the script creates `library_db` instead,
-   change the name to `libdb` in the `DROP DATABASE`, `CREATE DATABASE` and `USE` lines near the top before running it.
 
 3. **Check the connection settings** at the top of `src/librarymanagement/DBConnection.java`:
    ```java
